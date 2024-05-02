@@ -16,7 +16,7 @@ class ItemSeeder extends Seeder
         $faker = Faker::create();
 
         // Define the number of items you want to generate
-        $numberOfItems = 50;
+        $numberOfItems = 20;
 
         // Generate and insert random data for the specified number of items
         for ($i = 0; $i < $numberOfItems; $i++) {
@@ -28,7 +28,7 @@ class ItemSeeder extends Seeder
                 'price' => $faker->numberBetween(50, 500),
                 'itemType' => $itemType,
                 'quantity' => $faker->numberBetween(10, 100),
-                'shop' => $faker->randomElement(['sm','savemore','puregold','ace']),
+                'shop_id' => $faker->numberBetween(1, 4),
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
