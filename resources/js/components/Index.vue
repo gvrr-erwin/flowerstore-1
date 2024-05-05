@@ -103,6 +103,7 @@
 import { ref, onMounted, watch } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import { route } from '../../../vendor/tightenco/ziggy/dist';
 
 export default {
   setup() {
@@ -121,7 +122,7 @@ export default {
 
     const fetchItems = async () => {
         try {
-        const response = await axios.get('http://localhost:8000/items', {
+        const response = await axios.get(route('items.index'), {
           params: {
             max_price: maxPrice.value,
             item_types: selectedItemTypes.value.length ? selectedItemTypes.value : null,
@@ -134,15 +135,6 @@ export default {
         totalPages.value = response.data.last_page;
       } catch (error) {
         console.error('Error fetching items:', error);
-      }
-    };
-
-    const fetchShops = async () => {
-      try {
-        const response = await axios.get('http://localhost:8000/api/shops');
-        shops.value = response.data;
-      } catch (error) {
-        console.error('Error fetching shops:', error);
       }
     };
 
@@ -189,7 +181,7 @@ export default {
 
     const deleteItem = async (id) => {
       try {
-        const uri = `http://localhost:8000/items/${id}`;
+        const uri = route('items.show', id);
         await axios.delete(uri);
         items.value = items.value.filter((item) => item.id !== id);
         successMessage.value = 'Item deleted successfully!';
@@ -205,7 +197,6 @@ export default {
 
     onMounted(() => {
       fetchItems();
-      fetchShops();
     });
 
     watch([maxPrice, selectedItemTypes, search], () => {

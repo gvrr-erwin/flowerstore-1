@@ -1,6 +1,7 @@
 import './bootstrap';
 import { createApp } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
+import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist';
 
 
 import App from './App.vue';

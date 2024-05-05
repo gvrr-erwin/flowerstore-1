@@ -69,6 +69,7 @@
 <script>
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { route } from '../../../vendor/tightenco/ziggy/dist';
 
 export default {
     setup() {
@@ -77,7 +78,7 @@ export default {
         const successMessage = ref('');
 
         const addItem = async () => {
-            const uri = 'http://localhost:8000/items';
+            const uri = route('items.index');
             try {
                 await axios.post(uri, item);
                 successMessage.value = 'Item added successfully!';

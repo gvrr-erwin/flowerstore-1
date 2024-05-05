@@ -8,6 +8,7 @@
         @vite(['resources/js/app.js'])
     </head>
     <body>
+        @routes
         <div id="app">
         </div>
         <script>

@@ -70,17 +70,20 @@
 <script>
 import { onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { route } from '../../../vendor/tightenco/ziggy/dist';
+import axios from 'axios';
 
 export default {
     setup() {
         const item = reactive({ name: '', price: '', shop_id: '' });
-        const route = useRoute();
-        const router = useRouter();
+        const currentRoute = useRoute();
         const successMessage = ref('');
+
+        const id = currentRoute.params.id;
 
         const getItem = async () => {
             try {
-                const uri = `http://localhost:8000/items/${route.params.id}/edit`;
+                const uri = route('items.edit', { id: id });
                 const response = await axios.get(uri);
                 Object.assign(item, response.data);
             }
@@ -90,37 +93,27 @@ export default {
         };
 
         const updateItem = async () => {
-            const uri = `http://localhost:8000/items/${route.params.id}`;
-            console.log(uri)
-            await axios.patch(uri, item);
-            successMessage.value = 'Item Updated Successfully!';
-            setTimeout(() => {
-                successMessage.value = '';
-                router.push({ name: 'Index' });
-            }, 1000);
+            try {
+                const uri = route('items.update', { id: id });
+                await axios.patch(uri, item);
+                successMessage.value = 'Item Updated Successfully!';
+                setTimeout(() => {
+                    successMessage.value = '';
+                    router.push({ name: 'Index' });
+                }, 1000);
+            } catch (error) {
+                console.error("Failed to update item:", error);
+            }
         };
 
         onMounted(getItem);
 
-        const shops = ref([]);
-
-        const fetchShops = async () => {
-            try {
-                const response = await axios.get('http://localhost:8000/api/shops');
-                shops.value = response.data;
-            } catch (error) {
-                console.error('Error fetching shops:', error);
-            }
-        };
-
-        onMounted(fetchShops);
-
         return {
             item,
             updateItem,
-            successMessage,
-            shops
+            successMessage
         };
     }
 }
 </script>
+
