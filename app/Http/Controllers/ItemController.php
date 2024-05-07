@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Item;
+use App\Models\Shop;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Validator;
 
@@ -37,11 +38,17 @@ class ItemController extends Controller
         }
 
         if ($request->has('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $query->where(function($query) use ($request) {
+                $query->where('items.name', 'like', '%' . $request->search . '%')
+                      ->orWhere('items.itemType', 'like', '%' . $request->search . '%')
+                      ->orWhereHas('shop', function($query) use ($request) {
+                          $query->where('shopName', 'like', '%' . $request->search . '%');
+                      });
+            });
         }
 
         // Paginate the results
-        $items = $query->with('shop')->paginate(5);
+        $items = $query->with('shop')->paginate(20);
 
         return response()->json($items);
     }
@@ -108,7 +115,7 @@ class ItemController extends Controller
         $item->price = $request->get('price');
         $item->itemType = $request->get('itemType');
         $item->quantity = $request->get('quantity');
-        $item->shop_id = $request->get('shop_id'); // Update shop_id instead of shop
+        $item->shop_id = $request->get('shop_id');
         $item->save();
 
         return response()->json('Successfully Updated');

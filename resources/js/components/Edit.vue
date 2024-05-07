@@ -23,12 +23,7 @@
                         <div class="col-md-6">
                             <label for="itemType" class="form-label">Item Type:</label>
                             <select id="itemType" class="form-select" v-model="item.itemType">
-                                <option value="meat">Meat</option>
-                                <option value="vegetable">Vegetable</option>
-                                <option value="fruit">Fruit</option>
-                                <option value="drink">Drink</option>
-                                <option value="canned_good">Canned Good</option>
-                                <option value="others">Others</option>
+                                <option v-for="type in itemTypes" :key="type" :value="type">{{ type }}</option>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -77,7 +72,10 @@ export default {
     setup() {
         const item = reactive({ name: '', price: '', shop_id: '' });
         const currentRoute = useRoute();
+        const router = useRouter();
         const successMessage = ref('');
+        const itemTypes = ref([]);
+
 
         const id = currentRoute.params.id;
 
@@ -106,12 +104,35 @@ export default {
             }
         };
 
-        onMounted(getItem);
+        const fetchItemTypes = async () => {
+            try {
+                const uri = route('items.index');
+                const response = await axios.get(uri);
+                console.log('Response data:', response.data);
+
+                const itemTypeSet = new Set();
+                response.data.data.forEach(item => {
+                    itemTypeSet.add(item.itemType);
+                });
+
+                itemTypes.value = Array.from(itemTypeSet);
+            } catch (error) {
+                console.error('Error fetching item types:', error);
+                // Handle the error appropriately
+            }
+        };
+
+        onMounted(() => {
+            fetchItemTypes();
+            getItem();
+        });
+
 
         return {
             item,
             updateItem,
-            successMessage
+            successMessage,
+            itemTypes
         };
     }
 }

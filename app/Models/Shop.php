@@ -9,6 +9,8 @@ class Shop extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['shopName'];
+
     public function items()
 {
     return $this->hasMany(Item::class, 'shop_id');

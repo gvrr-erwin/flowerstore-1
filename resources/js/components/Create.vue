@@ -23,12 +23,7 @@
                         <div class="col-md-6">
                             <label for="itemType" class="form-label">Item Type:</label>
                             <select id="itemType" class="form-select" v-model="item.itemType">
-                                <option value="meat">Meat</option>
-                                <option value="vegetable">Vegetable</option>
-                                <option value="fruit">Fruit</option>
-                                <option value="drink">Drink</option>
-                                <option value="canned_good">Canned Good</option>
-                                <option value="others">Others</option>
+                                <option v-for="type in itemTypes" :key="type" :value="type">{{ type }}</option>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -67,15 +62,17 @@
 }
 </style>
 <script>
-import { reactive, ref } from 'vue';
+import { reactive, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { route } from '../../../vendor/tightenco/ziggy/dist';
+import axios from 'axios';
 
 export default {
     setup() {
         const item = reactive({ name: '', price: '', shop_id: '' });
         const router = useRouter();
         const successMessage = ref('');
+        const itemTypes = ref([]);
 
         const addItem = async () => {
             const uri = route('items.index');
@@ -92,10 +89,32 @@ export default {
             }
         };
 
+        const fetchItemTypes = async () => {
+            try {
+                const uri = route('items.index');
+                const response = await axios.get(uri);
+                console.log('Response data:', response.data);
+
+                const itemTypeSet = new Set();
+                response.data.data.forEach(item => {
+                    itemTypeSet.add(item.itemType);
+                });
+
+                itemTypes.value = Array.from(itemTypeSet);
+            } catch (error) {
+                console.error('Error fetching item types:', error);
+                // Handle the error appropriately
+            }
+        };
+
+
+        onMounted(fetchItemTypes);
+
         return {
             item,
             addItem,
-            successMessage
+            successMessage,
+            itemTypes
         };
     }
 }
