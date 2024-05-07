@@ -36,7 +36,7 @@
               <td :style="{ 'text-decoration': item.checked ? 'line-through' : 'none' }">{{ item.price }}</td>
               <td :style="{ 'text-decoration': item.checked ? 'line-through' : 'none' }"> {{ item.itemType }}</td>
               <td :style="{ 'text-decoration': item.checked ? 'line-through' : 'none' }">{{ item.quantity }}</td>
-              <td :style="{ 'text-decoration': item.checked ? 'line-through' : 'none' }">{{ item.shop ? item.shop.shopName : 'N/A' }}</td>
+              <td :style="{ 'text-decoration': item.checked ? 'line-through' : 'none' }">{{ item.shop ? item.shop.name : 'N/A' }}</td>
               <td>
                 <router-link :to="{ name: 'Edit', params: { id: item.id } }" class="btn btn-sm btn-outline-primary me-2">
                   <i class="bi bi-pencil-square me-1"></i> Edit

@@ -42,7 +42,7 @@ class ItemController extends Controller
                 $query->where('items.name', 'like', '%' . $request->search . '%')
                       ->orWhere('items.itemType', 'like', '%' . $request->search . '%')
                       ->orWhereHas('shop', function($query) use ($request) {
-                          $query->where('shopName', 'like', '%' . $request->search . '%');
+                          $query->where('name', 'like', '%' . $request->search . '%');
                       });
             });
         }

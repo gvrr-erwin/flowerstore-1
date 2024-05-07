@@ -9,7 +9,7 @@ class Shop extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['shopName'];
+    protected $fillable = ['name'];
 
     public function items()
 {

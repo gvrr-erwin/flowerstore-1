@@ -15,10 +15,10 @@ class ShopSeeder extends Seeder
     {
         //
         $shops = [
-            ['shopName' => 'sm'],
-            ['shopName' => 'savemore'],
-            ['shopName' => 'puregold'],
-            ['shopName' => 'ace'],
+            ['name' => 'sm'],
+            ['name' => 'savemore'],
+            ['name' => 'puregold'],
+            ['name' => 'ace'],
         ];
 
         DB::table('shops')->insert($shops);
