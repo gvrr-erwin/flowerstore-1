@@ -35,16 +35,12 @@
                             <label for="shop" class="form-label">Shop:</label>
                             <select id="shop_id" class="form-select" v-model="item.shop_id" required>
                                 <option value="">Select Shop</option>
-                                <option value="1">SM</option>
-                                <option value="2">Savemore</option>
-                                <option value="3">Puregold</option>
-                                <option value="4">ACE</option>
+                                <option v-for="shop in shops" :key="shop.id" :value="shop.id">{{ shop.name }}</option>
                             </select>
                         </div>
                     </div>
                     <div class="mt-4 text-center">
-                        <button type="submit" class="btn btn-primary px-4"><i class="bi bi-plus-lg"></i> Add
-                            Item</button>
+                        <button type="submit" class="btn btn-primary px-4"><i class="bi bi-plus-lg"></i> Add Item</button>
                     </div>
                 </form>
                 <div class="mt-4 d-flex justify-content-start">
@@ -56,11 +52,14 @@
         </div>
     </div>
 </template>
+
+
 <style>
 .bg-gradient-primary {
     background: linear-gradient(45deg, #007bff, #6610f2);
 }
 </style>
+
 <script>
 import { reactive, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
@@ -69,13 +68,14 @@ import axios from 'axios';
 
 export default {
     setup() {
-        const item = reactive({ name: '', price: '', shop_id: '' });
+        const item = reactive({ name: '', price: '', itemType: '', quantity: '', shop_id: '' });
         const router = useRouter();
         const successMessage = ref('');
         const itemTypes = ref([]);
+        const shops = ref([]); // Add a ref to store shops
 
         const addItem = async () => {
-            const uri = route('items.index');
+            const uri = route('items.store'); // Ensure you have the correct route name
             try {
                 await axios.post(uri, item);
                 successMessage.value = 'Item added successfully!';
@@ -107,15 +107,32 @@ export default {
             }
         };
 
+        const fetchShops = async () => {
+            try {
+                const uri = route('shops.index'); // Ensure you have the correct route name for shops
+                const response = await axios.get(uri);
+                shops.value = response.data;
+            } catch (error) {
+                console.error('Error fetching shops:', error);
+                // Handle the error appropriately
+            }
+        };
 
-        onMounted(fetchItemTypes);
+        onMounted(() => {
+            fetchItemTypes();
+            fetchShops(); // Fetch shops on mount
+        });
 
         return {
             item,
             addItem,
             successMessage,
-            itemTypes
+            itemTypes,
+            shops // Return shops so it can be used in the template
         };
     }
 }
 </script>
+
+
+

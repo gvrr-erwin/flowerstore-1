@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Models\Shop;
-use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Validator;
 
 class ItemController extends Controller
@@ -47,20 +46,10 @@ class ItemController extends Controller
             });
         }
 
-        // Paginate the results
+        // Get the results with associated shops
         $items = $query->with('shop')->paginate(20);
 
         return response()->json($items);
-    }
-
-
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-
     }
 
     /**
@@ -85,15 +74,6 @@ class ItemController extends Controller
         $item = Item::create($request->all());
 
         return response()->json($item, 201);
-
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
     }
 
     /**
@@ -132,3 +112,4 @@ class ItemController extends Controller
         return response()->json('Successfully Deleted');
     }
 }
+

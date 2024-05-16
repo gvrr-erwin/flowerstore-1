@@ -13,7 +13,7 @@ class Shop extends Model
 
     public function items()
 {
-    return $this->hasMany(Item::class, 'shop_id');
+    return $this->hasMany(Item::class);
 }
 
 }
