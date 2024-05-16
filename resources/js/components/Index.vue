@@ -110,7 +110,6 @@ export default {
     const items = ref([]);
     const currentPage = ref(1);
     const maxPrice = ref(null);
-    const itemTypes = ref(['meat', 'vegetable', 'fruit', 'drink', 'canned_good', 'others']);
     const selectedItemTypes = ref([]);
     const search = ref('');
     const itemIdToDelete = ref(null);
@@ -208,7 +207,6 @@ export default {
         items,
         currentPage,
         maxPrice,
-        itemTypes,
         selectedItemTypes,
         search,
         totalPages,
