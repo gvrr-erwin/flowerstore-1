@@ -9,56 +9,45 @@
           <i class="bi bi-plus-lg"></i> Add New Item
         </router-link>
       </div>
-        <!-- Search bar -->
-        <div class="mb-3">
-                <label for="searchInput" class="form-label">Search Item:</label>
-                <input type="text" id="searchInput" class="form-control" v-model="search" placeholder="Enter item name">
-        </div>
-        <!-- table for contents/data -->
-      <div class="table-responsive">
-        <table class="table table-hover table-bordered">
-          <thead class="table-dark">
-            <tr>
-              <th scope="col"></th>
-              <th scope="col">Item Name</th>
-              <th scope="col">Item Price</th>
-              <th scope="col">Item Type</th>
-              <th scope="col">Quantity</th>
-              <th scope="col">Shop</th>
-              <th scope="col" style="width: 20%;">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="item in items" :key="item.id">
-
-              <td><input type="checkbox" v-model="item.checked"></td>
-              <td :style="{ 'text-decoration': item.checked ? 'line-through' : 'none' }">{{ item.name }}</td>
-              <td :style="{ 'text-decoration': item.checked ? 'line-through' : 'none' }">{{ item.price }}</td>
-              <td :style="{ 'text-decoration': item.checked ? 'line-through' : 'none' }"> {{ item.itemType }}</td>
-              <td :style="{ 'text-decoration': item.checked ? 'line-through' : 'none' }">{{ item.quantity }}</td>
-              <td :style="{ 'text-decoration': item.checked ? 'line-through' : 'none' }">{{ item.shop ? item.shop.name : 'N/A' }}</td>
-              <td>
-                <router-link :to="{ name: 'Edit', params: { id: item.id } }" class="btn btn-sm btn-outline-primary me-2">
-                  <i class="bi bi-pencil-square me-1"></i> Edit
-                </router-link>
-                <button class="btn btn-sm btn-outline-danger" @click="openDeleteConfirmation(item.id)">
-                  <i class="bi bi-trash me-1"></i> Delete
-                </button>
-              </td>
-            </tr>
-            <!-- No Items Found Message -->
-            <tr v-if="items.length === 0">
-                <td colspan="8" class="text-center">No items found</td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- Search bar -->
+      <div class="mb-3">
+        <label for="searchInput" class="form-label">Search Item:</label>
+        <input type="text" id="searchInput" class="form-control" v-model="search" placeholder="Enter item name">
       </div>
-
+      <!--contents/data-->
+      <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col" v-for="item in items" :key="item.id">
+          <div class="card h-100">
+            <div class="card-body">
+              <input type="checkbox" v-model="item.checked" class="form-check-input">
+              <h5 class="card-title" :style="{ 'text-decoration': item.checked ? 'line-through' : 'none' }">{{ item.name }}</h5>
+              <p class="card-text" :style="{ 'text-decoration': item.checked ? 'line-through' : 'none' }">
+                <strong>Price:</strong> {{ item.price }}<br>
+                <strong>Type:</strong> {{ item.itemType }}<br>
+                <strong>Quantity:</strong> {{ item.quantity }}<br>
+                <strong>Shop:</strong> {{ item.shop ? item.shop.name : 'N/A' }}
+              </p>
+            </div>
+            <div class="card-footer">
+              <router-link :to="{ name: 'Edit', params: { id: item.id } }" class="btn btn-sm btn-outline-primary me-2">
+                <i class="bi bi-pencil-square me-1"></i> Edit
+              </router-link>
+              <button class="btn btn-sm btn-outline-danger" @click="openDeleteConfirmation(item.id)">
+                <i class="bi bi-trash me-1"></i> Delete
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- No Items Found Message -->
+        <div class="col-12 text-center" v-if="items.length === 0">
+          No items found
+        </div>
+      </div>
       <!-- Delete Confirmation Modal -->
       <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel"
             aria-hidden="true" ref="deleteModal">
-            <div class="modal-dialog">
-            <div class="modal-content">
+        <div class="modal-dialog">
+          <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirm Delete</h5>
               <button type="button" class="btn-close" @click="closeModal" aria-label="Close"></button>
@@ -73,31 +62,29 @@
           </div>
         </div>
       </div>
-
       <!-- Pagination -->
       <div class="pagination-buttons">
         <button @click="previousPage" class="btn btn-primary" :disabled="currentPage === 1">Previous Page</button>
         <button @click="nextPage" class="btn btn-primary" :disabled="currentPage === totalPages">Next Page</button>
       </div>
-
       <!-- Filter inputs -->
-        <div class="row g-3">
-            <div class="col-md-6">
-                <label for="maxPrice" class="form-label">Max Price:</label>
-                <input type="number" id="maxPrice" class="form-control" v-model="maxPrice" @input="filterItems" placeholder="Enter max price">
-                <button @click="resetPrice" class="btn btn-primary">Reset</button>
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">Item Type:</label>
-                <div class="form-check" v-for="(type, index) in itemTypes" :key="index">
-                <input class="form-check-input" type="checkbox" :value="type" :id="type" v-model="selectedItemTypes">
-                <label class="form-check-label" :for="type">{{ type }}</label>
-                </div>
-            </div>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label for="maxPrice" class="form-label">Max Price:</label>
+          <input type="number" id="maxPrice" class="form-control" v-model="maxPrice" @input="filterItems" placeholder="Enter max price">
+          <button @click="resetPrice" class="btn btn-primary">Reset</button>
         </div>
-        <livewire:shop-component />
+        <div class="col-md-6">
+          <label class="form-label">Item Type:</label>
+          <div class="form-check" v-for="(type, index) in itemTypes" :key="index">
+            <input class="form-check-input" type="checkbox" :value="type" :id="type" v-model="selectedItemTypes">
+            <label class="form-check-label" :for="type">{{ type }}</label>
+          </div>
+        </div>
       </div>
+    </div>
   </template>
+
 
 <script>
 import { ref, onMounted, watch } from 'vue';
