@@ -11,7 +11,7 @@
       </div>
       <!-- Search bar -->
       <div class="mb-3">
-        <label for="searchInput" class="form-label">Search Item:</label>
+        <label for="searchInput" class="form-label">Search Bar:</label>
         <input type="text" id="searchInput" class="form-control" v-model="search" placeholder="Enter item name">
       </div>
       <!--contents/data-->
@@ -210,8 +210,6 @@ export default {
   },
 };
 </script>
-
-
 
 <style>
 .pagination-buttons {

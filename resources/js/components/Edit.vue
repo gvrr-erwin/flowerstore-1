@@ -35,10 +35,7 @@
                             <label for="shop" class="form-label">Shop:</label>
                             <select id="shop_id" class="form-select" v-model="item.shop_id" required>
                                 <option value="">Select Shop</option>
-                                <option value="1">SM</option>
-                                <option value="2">Savemore</option>
-                                <option value="3">Puregold</option>
-                                <option value="4">ACE</option>
+                                <option v-for="shop in shops" :key="shop.id" :value="shop.id">{{ shop.name }}</option>
                             </select>
                         </div>
                     </div>
@@ -75,6 +72,7 @@ export default {
         const router = useRouter();
         const successMessage = ref('');
         const itemTypes = ref([]);
+        const shops = ref([]);
 
 
         const id = currentRoute.params.id;
@@ -122,9 +120,21 @@ export default {
             }
         };
 
+        const fetchShops = async () => {
+            try {
+                const uri = route('shops.index');
+                const response = await axios.get(uri);
+                shops.value = response.data;
+            } catch (error) {
+                console.error('Error fetching shops:', error);
+                // Handle the error appropriately
+            }
+        };
+
         onMounted(() => {
             fetchItemTypes();
             getItem();
+            fetchShops();
         });
 
 
@@ -132,7 +142,8 @@ export default {
             item,
             updateItem,
             successMessage,
-            itemTypes
+            itemTypes,
+            shops
         };
     }
 }

@@ -72,10 +72,10 @@ export default {
         const router = useRouter();
         const successMessage = ref('');
         const itemTypes = ref([]);
-        const shops = ref([]); // Add a ref to store shops
+        const shops = ref([]);
 
         const addItem = async () => {
-            const uri = route('items.store'); // Ensure you have the correct route name
+            const uri = route('items.store');
             try {
                 await axios.post(uri, item);
                 successMessage.value = 'Item added successfully!';
@@ -109,7 +109,7 @@ export default {
 
         const fetchShops = async () => {
             try {
-                const uri = route('shops.index'); // Ensure you have the correct route name for shops
+                const uri = route('shops.index');
                 const response = await axios.get(uri);
                 shops.value = response.data;
             } catch (error) {
@@ -120,7 +120,7 @@ export default {
 
         onMounted(() => {
             fetchItemTypes();
-            fetchShops(); // Fetch shops on mount
+            fetchShops();
         });
 
         return {
@@ -128,7 +128,7 @@ export default {
             addItem,
             successMessage,
             itemTypes,
-            shops // Return shops so it can be used in the template
+            shops
         };
     }
 }
